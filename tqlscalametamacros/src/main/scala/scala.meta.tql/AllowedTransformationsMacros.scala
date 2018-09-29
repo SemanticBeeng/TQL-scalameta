@@ -7,14 +7,15 @@ package scala.meta.tql
 import tql._
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
+import org.scalameta.adt.{Reflection => AdtReflection}
 
 
-class AllowedTransformationsMaterializer(val c: Context) extends org.scalameta.adt.AdtReflection{
+class AllowedTransformationsMaterializer(val c: Context) extends AdtReflection {
   val u: c.universe.type = c.universe
   import c.universe._
 
   def materialize[T : c.WeakTypeTag, I : c.WeakTypeTag, O : c.WeakTypeTag]: c.Expr[tql.AllowedTransformation[I, O]] = {
-    val brlhs = getBranch[I].filterNot(_.sym.fullName == u.symbolOf[T].fullName)
+    val brlhs = getBranch[I].filterNot(_.asType.fullName == u.symbolOf[T].fullName)
     val Tout = u.symbolOf[O].asType
     //c.abort(c.enclosingPosition, show(Tout) + " : " + show(brlhs.filter(x => Tout.toType <:< x.info.typeSymbol.asType.toType)))
 
@@ -25,7 +26,7 @@ class AllowedTransformationsMaterializer(val c: Context) extends org.scalameta.a
         "impossible to materialize AllowedTransformations[" +
           show(implicitly[c.WeakTypeTag[I]].tpe) + ", " +
           show(implicitly[c.WeakTypeTag[O]].tpe) + "]" + "\n" +
-          "because " + show(Tout.sym.fullName) + " is not a subtype of any in " + show(brlhs) + "\n")
+          "because " + show(Tout.asType.fullName) + " is not a subtype of any in " + show(brlhs) + "\n")
   }
 
 
@@ -40,5 +41,5 @@ class AllowedTransformationsMaterializer(val c: Context) extends org.scalameta.a
     else c.abort(c.enclosingPosition, show("impossible to get branch from  "  + show(implicitly[c.WeakTypeTag[A]])))
   }
 
-
+  override val mirror: u.Mirror = _
 }

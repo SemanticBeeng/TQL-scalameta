@@ -8,8 +8,19 @@ import org.scalameta.adt._
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox.Context //TODO change to blackbox
 
+import scala.reflect.runtime.universe._
+import scala.reflect.runtime.{universe => ru}
+
+//#todo : stopped here because "Field" does not exist anymore
+object AstReflection extends {
+  val u: ru.type = ru
+  val mirror: u.Mirror = u.runtimeMirror(classOf[scala.meta.Tree].getClassLoader)
+} with scala.meta.internal.trees.Reflection
+
 
 abstract class TransformerBuilder[T] {
+
+  import AstReflection._
 
   protected def transformAdt: T = macro TransformerMacros.buildTransformerMatcher[T]
 

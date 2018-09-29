@@ -27,7 +27,9 @@ object TQLBuild extends Build {
     "tqlscalametamacros",
     file("tqlscalametamacros"),
     settings = buildSettings ++ publishableSettings ++
-                macroSettings ++ Seq(libraryDependencies += "org.scalameta" % "scalameta_2.11" % metaVersion)
+                macroSettings
+                      ++ Seq(libraryDependencies += "org.scalameta" %% "scalameta" % metaVersion)
+                      ++ Seq(libraryDependencies += "org.scalameta" %% "transversers" % metaVersion)
   ) dependsOn(tql)
 
   lazy val scalaMeterFramework = new TestFramework("org.scalameter.ScalaMeterFramework")
@@ -40,8 +42,8 @@ object TQLBuild extends Build {
         libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value,
         libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test",
         libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
-        libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.7-SNAPSHOT" % "test",
-        libraryDependencies += "org.scalameta" % "scalahost" % metaVersion cross CrossVersion.full,
+        libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.10" % "test",
+        libraryDependencies += "org.scalameta" %% "scalahost" % "2.0.0-M1" cross CrossVersion.full,
         testFrameworks += scalaMeterFramework,
         testOptions += Tests.Argument(scalaMeterFramework, "-silent"),
         //fork in Test := true,
@@ -61,7 +63,7 @@ object TQLBuild extends Build {
     "examples",
     file("examples"),
     settings = buildSettings ++ Seq(
-        libraryDependencies += "org.scalameta" % "scalahost" % metaVersion cross CrossVersion.full
+        libraryDependencies += "org.scalameta" %% "scalahost" % "2.0.0-M1" cross CrossVersion.full
     )
   ) dependsOn(tqlscalameta)
 }

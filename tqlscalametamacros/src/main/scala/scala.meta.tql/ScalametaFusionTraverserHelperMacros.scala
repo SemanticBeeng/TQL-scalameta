@@ -11,7 +11,7 @@ import scala.reflect.macros.whitebox.Context
 
 class ScalametaFusionTraverserHelperMacros(override val c: Context)
   extends TraverserBuilder(c)
-  with org.scalameta.adt.AdtReflection {
+  with org.scalameta.adt.Reflection {
   val u: c.universe.type = c.universe
   import c.universe._
 
@@ -81,4 +81,6 @@ class ScalametaFusionTraverserHelperMacros(override val c: Context)
     //c.abort(c.enclosingPosition, show(newMap))
     q"new MapTagOptimized(Map(..$newMap))"
   }
+
+  override val mirror: u.Mirror = _
 }
