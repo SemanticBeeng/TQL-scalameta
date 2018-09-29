@@ -1,0 +1,11 @@
+.idea/
+examples/target/
+project/.boot/
+project/.ivy/
+project/target/
+target/
+tql/target/
+tqlmacros/target/
+tqlscalameta/target/
+tqlscalametamacros/target/
+
